@@ -30,8 +30,8 @@ venv:
 #=> setup: setup/upgrade packages *in current environment*
 .PHONY: setup
 setup: etc/develop.reqs etc/install.reqs
-	pip install --upgrade -r $(word 1,$^)
-	pip install --upgrade -r $(word 2,$^)
+	if [ -s "$(word 1,$^)" ]; then pip install --upgrade -r $(word 1,$^); fi
+	if [ -s "$(word 2,$^)" ]; then pip install --upgrade -r $(word 2,$^); fi
 
 #=> devready: create venv, install prerequisites, install pkg in develop mode
 .PHONY: devready
