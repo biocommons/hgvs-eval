@@ -62,6 +62,8 @@ setup(
         # "sphinx",
         # "sphinx_rtd_theme",
         # "sphinxcontrib-fulltoc",
+        "flask",
+        "flask-pbj",
         "wheel",
     ],
 
