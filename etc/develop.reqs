@@ -1,0 +1,6 @@
+flake8
+ipython
+pytest
+pytest-cov
+tox
+yapf

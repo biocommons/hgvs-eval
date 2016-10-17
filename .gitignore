@@ -87,3 +87,11 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+
+*~
+*.bak
+*.orig
+doc/_build
+.eggs
+archive
