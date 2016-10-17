@@ -1,0 +1,65 @@
+// info interface
+// from notes https://docs.google.com/spreadsheets/d/1eeiSlDry0boZ-_QQAvdhDLvyT9oUL_I9E7wwoxxyHMc/edit#gid=1421220287
+syntax = "proto3";
+package ga4gh;
+
+message HGVSInfoResponse {
+  string package_version = 1;
+  string hgvs_rest_api_version  = 2;
+  string hgvs_eval_version  = 3;
+  string timestamp  = 4;
+  string hgvs_nomenclature_version  = 5;
+}
+
+message HGVSInfoRequest { }
+
+service HGVSInfoService {
+  rpc GetHGVSInfo(HGVSInfoRequest)
+      returns (HGVSInfoResponse);
+}
+
+
+message Pos {
+  int64 start = 1;
+  int64 end = 2;
+}
+
+
+
+message HGVSProjectionResponse {
+  string ac  = 1;
+  Pos pos = 2;
+  string alt = 3 ;
+}
+
+message HGVSProjectionRequest {
+  string hgvs_string = 1;
+  string ac = 2;
+}
+
+service HGVSProjectionService {
+  rpc GetHGVSValidation(HGVSProjectionRequest)
+      returns (HGVSProjectionResponse);
+  rpc GetHGVSParse(HGVSProjectionRequest)
+      returns (HGVSProjectionResponse);
+  rpc GetHGVSRewrite(HGVSProjectionRequest)
+      returns (HGVSProjectionResponse);
+}
+
+
+
+// # generate via $protoc hgvs.proto  --python_out=./
+// import hgvs_pb2 as pb
+// from google.protobuf.json_format import MessageToJson
+
+// resp = pb.HGVSInfoResponse()
+// resp.package_version = 'foo'
+// print MessageToJson(resp)
+
+// resp = pb.HGVSProjectionResponse()
+// resp.ac = 'foo'
+// print MessageToJson(resp)
+
+// resp = pb.HGVSProjectionRequest()
+// resp.ac = 'foo'
+// print MessageToJson(resp)
