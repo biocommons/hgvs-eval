@@ -87,6 +87,39 @@ def rewrite():
     return MessageToJson(resp)
 
 
+@app.route('/project_t_to_g', methods=['POST'])
+def project_t_to_g():
+    """projects transcript (c. or n.) variant hgvs_string onto genomic
+    sequence specified by ac, returning g. hgvs string
+    Transcripts may be coding or non-coding.
+    """
+    req = _getProjectionRequest()
+    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    return MessageToJson(resp)
+
+
+@app.route('/project_g_to_t', methods=['POST'])
+def project_g_to_t():
+    """projects g. variant hgvs_string onto transcript sequence
+    specified by ac, returning a c. or n. hgvs string
+    Transcripts may be coding or non-coding.
+    """
+    req = _getProjectionRequest()
+    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    return MessageToJson(resp)
+
+
+@app.route('/project_c_to_p', methods=['POST'])
+def project_c_to_p():
+    """projects c. hgvs_string onto corresponding
+    protein sequence, returning a p. hgvs string.
+    Transcripts may be coding or non-coding.
+    """
+    req = _getProjectionRequest()
+    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    return MessageToJson(resp)
+
+
 def _getProjectionRequest():
     """
     create a HGVSProjectionRequest from the request
