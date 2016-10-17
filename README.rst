@@ -1,9 +1,9 @@
 hgvs-eval 
 !!!!!!!!!
 
-*short description of package*
+Automated evaluation suite to assess tools that manipulate HGVS formatted variants
 
 ----
 
-Longer description of package.
+
 
