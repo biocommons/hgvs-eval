@@ -20,7 +20,7 @@ def info():
       rpc GetHGVSInfo(HGVSInfoRequest)
           returns (HGVSInfoResponse);
     }
-    $ curl http://192.168.99.100:8000/info
+    $ curl http://localhost:8000/info
     {
       "packageVersion": "dummy-package-version"
     }
@@ -38,7 +38,7 @@ def validate():
               returns (HGVSProjectionResponse);
         }
         $ curl -H "Content-Type: application/json" \
-            -XPOST http://192.168.99.100:8000/validate \
+            -XPOST http://localhost:8000/validate \
             -d '{"ac": "test-ac-validate", "hgvsString": "test-hgvs-string"}'
         {
           "ac": "test-ac-validate"
@@ -57,7 +57,7 @@ def parse():
               returns (HGVSProjectionResponse);
         }
         $ curl -H "Content-Type: application/json" \
-            -XPOST http://192.168.99.100:8000/parse \
+            -XPOST http://localhost:8000/parse \
             -d '{"ac": "test-ac-parse", "hgvsString": "test-hgvs-string"}'
         {
           "ac": "test-ac-parse"
@@ -76,7 +76,7 @@ def rewrite():
               returns (HGVSProjectionResponse);
         }
         $ curl -H "Content-Type: application/json" -XPOST \
-            http://192.168.99.100:8000/rewrite \
+            http://localhost:8000/rewrite \
             -d '{"ac": "test-ac-rewrite", "hgvsString": "test-hgvs-string"}'
         {
           "ac": "test-ac-rewrite"
