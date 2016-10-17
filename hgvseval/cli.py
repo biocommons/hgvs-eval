@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
+import os
 import sys
 import argparse
 import pytest
@@ -32,13 +33,14 @@ def main(argv=sys.argv[1:]):
           .format(args.endpoint))
 
     # Fixture file
-    import os
     test_dir  = os.path.abspath(os.path.dirname(__file__)) + '/tests'
 
     test_args = [
-        "--html={}".format(args.html),
         "--endpoint={}".format(args.endpoint),
+        "--html={}".format(args.html),
+        # --json={}
         "--self-contained-html",
+        "--capture=no",
         test_dir,
     ]
 

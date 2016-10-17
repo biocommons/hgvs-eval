@@ -5,6 +5,7 @@ __pycache__/
 
 # Test report output
 *.html
+*.swp
 
 # C extensions
 *.so
