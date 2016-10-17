@@ -1,3 +1,8 @@
+import requests
+import json
+from urlparse import urljoin
+
+
 def test_info(endpoint):
     """Tests the info endpoint for the given service."""
     assert 1 == 1
@@ -20,4 +25,12 @@ def test_criteria(endpoint, criteria):
             'description': 'Tests ...'
         }
     """
-    assert 1 == 1
+    url = urljoin(endpoint, criteria['operation'])
+    print "Testing HGVS operation on: {}".format(url)
+    res = requests.post(
+        url,
+        data=json.dumps({
+            'ac': criteria['output_accepted'].split(':')[0],
+            'hgvsString': criteria['input']
+        }))
+    print res.json()
