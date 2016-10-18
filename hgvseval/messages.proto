@@ -1,7 +1,4 @@
-// info interface
-// from notes https://docs.google.com/spreadsheets/d/1eeiSlDry0boZ-_QQAvdhDLvyT9oUL_I9E7wwoxxyHMc/edit#gid=1421220287
-// generate via `$ protoc hgvs.proto  --python_out=./`
-// import hgvs_pb2 as pb
+// generate via `$ protoc messages.proto  --python_out=./`
 
 syntax = "proto3";
 package ga4gh;

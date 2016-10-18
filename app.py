@@ -1,10 +1,3 @@
-import json
-
-# our generated code
-# generate via `$protoc hgvs.proto  --python_out=./`
-from google.protobuf.json_format import ParseDict
-import hgvs_pb2 as pb
-
 from flask import Flask
 from flask import request
 from flask import render_template
@@ -12,6 +5,7 @@ from google.protobuf.json_format import MessageToJson
 from google.protobuf.json_format import Parse
 from google.protobuf.json_format import ParseDict
 
+import hgvseval.messages_pb2 as hm
 from hgvseval.testservice.biocommonsService import BiocommonsService
 
 bs = BiocommonsService()
@@ -30,7 +24,7 @@ def info():
       "packageVersion": "dummy-package-version"
     }
     """
-    resp = ParseDict(bs.info(), pb.HGVSInfoResponse())
+    resp = ParseDict(bs.info(), hm.HGVSInfoResponse())
     return MessageToJson(resp)
 
 
@@ -128,7 +122,7 @@ def _getProjectionRequest():
     """
     create a HGVSProjectionRequest from the request
     """
-    req = Parse(request.data, pb.HGVSProjectionRequest())
+    req = Parse(request.data, hm.HGVSProjectionRequest())
     # print MessageToJson(req)
     return req
 
@@ -137,7 +131,7 @@ def _createParseResponse(start=None, end=None, alt=None):
     """
     create a HGVSParseResponse from the parameters
     """
-    resp = pb.HGVSProjectionResponse()
+    resp = hm.HGVSProjectionResponse()
     if start is not None:
         resp.pos.start = start
         resp.pos.end = end
@@ -151,7 +145,7 @@ def _createProjectionResponse(hgvs_string=None):
     """
     create a HGVSProjectionResponse from the parameters
     """
-    resp = pb.HGVSProjectionResponse()
+    resp = hm.HGVSProjectionResponse()
     if hgvs_string:
         resp.hgvs_string = hgvs_string
     # print MessageToJson(resp)
@@ -166,7 +160,7 @@ def _createInfoResponse(package_version=None,
     """
     create a HGVSInfoResponse from the parameters
     """
-    resp = pb.HGVSInfoResponse()
+    resp = hm.HGVSInfoResponse()
     if package_version:
         resp.package_version = package_version
     if rest_api_version:
