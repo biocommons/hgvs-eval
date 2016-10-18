@@ -2,6 +2,7 @@ import json
 
 # our generated code
 # generate via `$protoc hgvs.proto  --python_out=./`
+from google.protobuf.json_format import ParseDict
 import hgvs_pb2 as pb
 
 from flask import Flask
@@ -11,6 +12,9 @@ from google.protobuf.json_format import MessageToJson
 from google.protobuf.json_format import Parse
 from google.protobuf.json_format import ParseDict
 
+from hgvseval.testservice.biocommonsService import BiocommonsService
+
+bs = BiocommonsService()
 app = Flask(__name__)
 
 
@@ -26,8 +30,7 @@ def info():
       "packageVersion": "dummy-package-version"
     }
     """
-    resp = _createInfoResponse()
-    resp.package_version = 'dummy-package-version'  # TODO - silly impl
+    resp = ParseDict(bs.info(), pb.HGVSInfoResponse())
     return MessageToJson(resp)
 
 

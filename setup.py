@@ -50,6 +50,7 @@ setup(
     },
 
     install_requires = [
+        "flask",
         "six",
     ],
 
@@ -59,10 +60,6 @@ setup(
         "pytest-json",
         "pytest-html",
         "setuptools_scm",
-        # "sphinx",
-        # "sphinx_rtd_theme",
-        # "sphinxcontrib-fulltoc",
-        "flask",
         "requests",
         "protobuf",
         "wheel",
