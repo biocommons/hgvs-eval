@@ -1,0 +1,6 @@
+pytest
+pytest-json
+pytest-html
+flask
+requests
+protobuf
