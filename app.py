@@ -1,13 +1,12 @@
-from flask import Flask
-from flask import request
-from flask import render_template
-from google.protobuf.json_format import MessageToJson
-from google.protobuf.json_format import Parse
-from google.protobuf.json_format import ParseDict
+import logging
+
+from flask import Flask, request
+from google.protobuf.json_format import MessageToJson, Parse, ParseDict
 
 import hgvseval.messages_pb2 as hm
 from hgvseval.testservice.biocommonsService import BiocommonsService
 
+logger = logging.getLogger(__name__)
 bs = BiocommonsService()
 app = Flask(__name__)
 
@@ -85,27 +84,31 @@ def rewrite():
     return MessageToJson(resp)
 
 
-@app.route('/project_t_to_g', methods=['POST'])
-def project_t_to_g():
-    """projects transcript (c. or n.) variant hgvs_string onto genomic
-    sequence specified by ac, returning g. hgvs string
-    Transcripts may be coding or non-coding.
-    """
-    req = _getProjectionRequest()
-    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
-    return MessageToJson(resp)
-
-
 @app.route('/project_g_to_t', methods=['POST'])
 def project_g_to_t():
     """projects g. variant hgvs_string onto transcript sequence
     specified by ac, returning a c. or n. hgvs string
     Transcripts may be coding or non-coding.
     """
-    req = _getProjectionRequest()
-    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
+    
+    hgvs_string = request.form.get("hgvs_string")
+    ac = request.form.get("ac")
+    print("project_g_to_t({}, {})".format(hgvs_string, ac))
+    hgvs_string = bs.project_g_to_t(hgvs_string=hgvs_string, ac=ac)
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
+
+
+@app.route('/project_t_to_g', methods=['POST'])
+def project_t_to_g():
+    """projects transcript (c. or n.) variant hgvs_string onto genomic
+    sequence specified by ac, returning g. hgvs string
+    Transcripts may be coding or non-coding.
+    """
+    hgvs_string = bs.project_t_to_g(hgvs_string=request["hgvs_string"], ac=request["ac"])
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    return MessageToJson(resp)
 
 @app.route('/project_c_to_p', methods=['POST'])
 def project_c_to_p():
@@ -152,27 +155,6 @@ def _createProjectionResponse(hgvs_string=None):
     return resp
 
 
-def _createInfoResponse(package_version=None,
-                        rest_api_version=None,
-                        eval_version=None,
-                        timestamp=None,
-                        nomenclature_version=None):
-    """
-    create a HGVSInfoResponse from the parameters
-    """
-    resp = hm.HGVSInfoResponse()
-    if package_version:
-        resp.package_version = package_version
-    if rest_api_version:
-        resp.rest_api_version = rest_api_version
-    if eval_version:
-        resp.eval_version = eval_version
-    if timestamp:
-        resp.timestamp = timestamp
-    if nomenclature_version:
-        resp.nomenclature_version = nomenclature_version
-    # print MessageToJson(resp)
-    return resp
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=8000)  # TODO - add config class
