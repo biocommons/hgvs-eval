@@ -10,7 +10,7 @@ import hgvs.normalizer
 class BiocommonsService(HGVSTestService):
     hp = hgvs.parser.Parser()
     hdp = hgvs.dataproviders.uta.connect()
-    vm =  hgvs.variantmapper.VariantMapper(hdp)
+    vm = hgvs.variantmapper.VariantMapper(hdp)
     hn = hgvs.normalizer.Normalizer(hdp)
     
     def __init__(self):
@@ -28,22 +28,22 @@ class BiocommonsService(HGVSTestService):
     def project_t_to_g(self, hgvs_string, ac):
         var_t = BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
         var_g = BiocommonsService.vm.t_to_g(var_t, ac, alt_aln_method='splign')
-        return var_g
+        return str(var_g)
 
     def project_g_to_t(self, hgvs_string, ac):
         var_g = BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
         var_t = BiocommonsService.vm.g_to_t(var_g, ac, alt_aln_method='splign')
-        return var_t
+        return str(var_t)
 
     def project_c_to_p(self, hgvs_string):
         var_c = BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
         var_p = BiocommonsService.vm.c_to_p(var_c)
-        return var_p
+        return str(var_p)
 
     def rewrite(self, hgvs_string):
         curr_var =  BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
         norm_var = BiocommonsService.hn.normalize(curr_var)
-        return norm_var
+        return str(norm_var)
 
     def validate(self, hgvs_string):
         # ability to rewrite without exception being used as proxy for validate     
@@ -52,6 +52,3 @@ class BiocommonsService(HGVSTestService):
             return True
         except Exeption:
             return False
-        
-
-    
