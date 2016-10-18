@@ -9,6 +9,7 @@ from flask import request
 from flask import render_template
 from google.protobuf.json_format import MessageToJson
 from google.protobuf.json_format import Parse
+from google.protobuf.json_format import ParseDict
 
 app = Flask(__name__)
 
@@ -41,11 +42,11 @@ def validate():
             -XPOST http://localhost:8000/validate \
             -d '{"ac": "test-ac-validate", "hgvsString": "test-hgvs-string"}'
         {
-          "ac": "test-ac-validate"
+          "hgvsString": "todo"
         }
     """
     req = _getProjectionRequest()
-    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
     return MessageToJson(resp)
 
 
@@ -60,11 +61,11 @@ def parse():
             -XPOST http://localhost:8000/parse \
             -d '{"ac": "test-ac-parse", "hgvsString": "test-hgvs-string"}'
         {
-          "ac": "test-ac-parse"
+          "hgvsString": "todo"
         }
     """
     req = _getProjectionRequest()
-    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
     return MessageToJson(resp)
 
 
@@ -79,11 +80,11 @@ def rewrite():
             http://localhost:8000/rewrite \
             -d '{"ac": "test-ac-rewrite", "hgvsString": "test-hgvs-string"}'
         {
-          "ac": "test-ac-rewrite"
+          "hgvsString": "todo"
         }
     """
     req = _getProjectionRequest()
-    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
     return MessageToJson(resp)
 
 
@@ -94,7 +95,7 @@ def project_t_to_g():
     Transcripts may be coding or non-coding.
     """
     req = _getProjectionRequest()
-    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
     return MessageToJson(resp)
 
 
@@ -105,7 +106,7 @@ def project_g_to_t():
     Transcripts may be coding or non-coding.
     """
     req = _getProjectionRequest()
-    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
     return MessageToJson(resp)
 
 
@@ -116,7 +117,7 @@ def project_c_to_p():
     Transcripts may be coding or non-coding.
     """
     req = _getProjectionRequest()
-    resp = _createProjectionResponse(ac=req.ac)  # TODO - silly impl
+    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
     return MessageToJson(resp)
 
 
@@ -129,17 +130,27 @@ def _getProjectionRequest():
     return req
 
 
-def _createProjectionResponse(ac=None, start=None, end=None, alt=None):
+def _createParseResponse(start=None, end=None, alt=None):
     """
-    create a HGVSProjectionResponse from the parameters
+    create a HGVSParseResponse from the parameters
     """
     resp = pb.HGVSProjectionResponse()
-    resp.ac = ac
     if start is not None:
         resp.pos.start = start
         resp.pos.end = end
     if alt:
         resp.alt = alt
+    # print MessageToJson(resp)
+    return resp
+
+
+def _createProjectionResponse(hgvs_string=None):
+    """
+    create a HGVSProjectionResponse from the parameters
+    """
+    resp = pb.HGVSProjectionResponse()
+    if hgvs_string:
+        resp.hgvs_string = hgvs_string
     # print MessageToJson(resp)
     return resp
 

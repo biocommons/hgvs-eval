@@ -5,6 +5,10 @@ from urlparse import urljoin
 
 def test_info(endpoint):
     """Tests the info endpoint for the given service."""
+    url = urljoin(endpoint, 'info')
+    print "Testing HGVS service info endpoint on: {}".format(url)
+    res = requests.get(url)
+    print res.json()
     assert 1 == 1
 
 
