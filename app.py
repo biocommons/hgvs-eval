@@ -1,14 +1,19 @@
 import logging
 
-from flask import Flask, request
-from google.protobuf.json_format import MessageToJson, Parse, ParseDict
+from flask import Flask, request,  Response
+from flask_cors import CORS
 
+from google.protobuf.json_format import MessageToJson, Parse, ParseDict
+import json
 import hgvseval.messages_pb2 as hm
 from hgvseval.testservice.biocommonsService import BiocommonsService
+import os
 
 logger = logging.getLogger(__name__)
 bs = BiocommonsService()
+
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/info', methods=['GET'])
@@ -90,14 +95,13 @@ def project_g_to_t():
     specified by ac, returning a c. or n. hgvs string
     Transcripts may be coding or non-coding.
     """
-    
+
     hgvs_string = request.form.get("hgvs_string")
     ac = request.form.get("ac")
     print("project_g_to_t({}, {})".format(hgvs_string, ac))
     hgvs_string = bs.project_g_to_t(hgvs_string=hgvs_string, ac=ac)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
-
 
 
 @app.route('/project_t_to_g', methods=['POST'])
@@ -110,6 +114,7 @@ def project_t_to_g():
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
+
 @app.route('/project_c_to_p', methods=['POST'])
 def project_c_to_p():
     """projects c. hgvs_string onto corresponding
@@ -119,6 +124,18 @@ def project_c_to_p():
     req = _getProjectionRequest()
     resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
     return MessageToJson(resp)
+
+
+@app.route("/api")
+def getSwaggerJson():
+    json_file = open(os.path.join(
+                     "./", "messages.swagger.json"), "r")
+    json = json_file.read()
+    json_file.close()
+    resp = Response(response=json,
+                    status=200,
+                    mimetype="application/json")
+    return resp
 
 
 def _getProjectionRequest():
@@ -153,7 +170,6 @@ def _createProjectionResponse(hgvs_string=None):
         resp.hgvs_string = hgvs_string
     # print MessageToJson(resp)
     return resp
-
 
 
 if __name__ == '__main__':

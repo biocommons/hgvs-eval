@@ -1,0 +1,281 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "messages.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/info": {
+      "get": {
+        "operationId": "GetHGVSInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSInfoResponse"
+            }
+          }
+        },
+        "tags": [
+          "HGVSProjectionService"
+        ]
+      }
+    },
+    "/parse": {
+      "post": {
+        "operationId": "GetHGVSParse",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSParseResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSParseRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HGVSProjectionService"
+        ]
+      }
+    },
+    "/project_c_to_p": {
+      "post": {
+        "operationId": "ProjectCToP",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HGVSProjectionService"
+        ]
+      }
+    },
+    "/project_g_to_t": {
+      "post": {
+        "operationId": "ProjectGToT",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HGVSProjectionService"
+        ]
+      }
+    },
+    "/project_t_to_g": {
+      "post": {
+        "operationId": "ProjectTToG",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HGVSProjectionService"
+        ]
+      }
+    },
+    "/rewrite": {
+      "post": {
+        "operationId": "GetHGVSRewrite",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HGVSProjectionService"
+        ]
+      }
+    },
+    "/validate": {
+      "post": {
+        "operationId": "GetHGVSValidation",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ga4ghHGVSProjectionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "HGVSProjectionService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ga4ghHGVSInfoRequest": {
+      "type": "object"
+    },
+    "ga4ghHGVSInfoResponse": {
+      "type": "object",
+      "properties": {
+        "eval_version": {
+          "type": "string",
+          "format": "string"
+        },
+        "nomenclature_version": {
+          "type": "string",
+          "format": "string"
+        },
+        "package_version": {
+          "type": "string",
+          "format": "string"
+        },
+        "rest_api_version": {
+          "type": "string",
+          "format": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "ga4ghHGVSParseRequest": {
+      "type": "object",
+      "properties": {
+        "hgvs_string": {
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "ga4ghHGVSParseResponse": {
+      "type": "object",
+      "properties": {
+        "ac": {
+          "type": "string",
+          "format": "string"
+        },
+        "alt": {
+          "type": "string",
+          "format": "string"
+        },
+        "pos": {
+          "$ref": "#/definitions/ga4ghPos"
+        }
+      }
+    },
+    "ga4ghHGVSProjectionRequest": {
+      "type": "object",
+      "properties": {
+        "ac": {
+          "type": "string",
+          "format": "string"
+        },
+        "hgvs_string": {
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "ga4ghHGVSProjectionResponse": {
+      "type": "object",
+      "properties": {
+        "hgvs_string": {
+          "type": "string",
+          "format": "string"
+        }
+      }
+    },
+    "ga4ghPos": {
+      "type": "object",
+      "properties": {
+        "end": {
+          "type": "string",
+          "format": "int64"
+        },
+        "start": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    }
+  }
+}

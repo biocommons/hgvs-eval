@@ -4,3 +4,4 @@ pytest-html
 flask
 requests
 protobuf
+flask-cors

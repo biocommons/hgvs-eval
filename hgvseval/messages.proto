@@ -2,6 +2,7 @@
 
 syntax = "proto3";
 package ga4gh;
+import "google/api/annotations.proto";
 
 message HGVSInfoRequest { }
 message HGVSInfoResponse {
@@ -36,13 +37,54 @@ message HGVSProjectionRequest {
   string ac = 2;
 }
 
+// coordinate with @app.route statements in app.py
 service HGVSProjectionService {
   rpc GetHGVSInfo(HGVSInfoRequest)
-      returns (HGVSInfoResponse) ;
+      returns (HGVSInfoResponse) {
+        option (google.api.http) = {
+          get: "/info"
+        };
+  };
   rpc GetHGVSValidation(HGVSProjectionRequest)
-      returns (HGVSProjectionResponse);
+      returns (HGVSProjectionResponse) {
+        option (google.api.http) = {
+          post: "/validate"
+          body: "*"
+        };
+  };
   rpc GetHGVSParse(HGVSParseRequest)
-      returns (HGVSParseResponse);
+      returns (HGVSParseResponse) {
+        option (google.api.http) = {
+          post: "/parse"
+          body: "*"
+        };
+  };
   rpc GetHGVSRewrite(HGVSProjectionRequest)
-      returns (HGVSProjectionResponse);
+      returns (HGVSProjectionResponse) {
+        option (google.api.http) = {
+          post: "/rewrite"
+          body: "*"
+        };
+  };
+  rpc ProjectGToT(HGVSProjectionRequest)
+      returns (HGVSProjectionResponse) {
+        option (google.api.http) = {
+          post: "/project_g_to_t"
+          body: "*"
+        };
+  };
+  rpc ProjectTToG(HGVSProjectionRequest)
+      returns (HGVSProjectionResponse) {
+        option (google.api.http) = {
+          post: "/project_t_to_g"
+          body: "*"
+        };
+  };
+  rpc ProjectCToP(HGVSProjectionRequest)
+      returns (HGVSProjectionResponse) {
+        option (google.api.http) = {
+          post: "/project_c_to_p"
+          body: "*"
+        };
+  };
 }
