@@ -63,7 +63,8 @@ setup(
         # "sphinx_rtd_theme",
         # "sphinxcontrib-fulltoc",
         "flask",
-        "flask-pbj",
+        "requests",
+        "protobuf",
         "wheel",
     ],
 
