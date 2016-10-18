@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='hgvs.proto',
   package='ga4gh',
   syntax='proto3',
-  serialized_pb=_b('\n\nhgvs.proto\x12\x05ga4gh\"\x11\n\x0fHGVSInfoRequest\"\x8c\x01\n\x10HGVSInfoResponse\x12\x17\n\x0fpackage_version\x18\x01 \x01(\t\x12\x18\n\x10rest_api_version\x18\x02 \x01(\t\x12\x14\n\x0c\x65val_version\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x1c\n\x14nomenclature_version\x18\x05 \x01(\t\"!\n\x03Pos\x12\r\n\x05start\x18\x01 \x01(\x03\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x03\"J\n\x16HGVSProjectionResponse\x12\n\n\x02\x61\x63\x18\x01 \x01(\t\x12\x17\n\x03pos\x18\x02 \x01(\x0b\x32\n.ga4gh.Pos\x12\x0b\n\x03\x61lt\x18\x03 \x01(\t\"8\n\x15HGVSProjectionRequest\x12\x13\n\x0bhgvs_string\x18\x01 \x01(\t\x12\n\n\x02\x61\x63\x18\x02 \x01(\t2\xc5\x02\n\x15HGVSProjectionService\x12>\n\x0bGetHGVSInfo\x12\x16.ga4gh.HGVSInfoRequest\x1a\x17.ga4gh.HGVSInfoResponse\x12P\n\x11GetHGVSValidation\x12\x1c.ga4gh.HGVSProjectionRequest\x1a\x1d.ga4gh.HGVSProjectionResponse\x12K\n\x0cGetHGVSParse\x12\x1c.ga4gh.HGVSProjectionRequest\x1a\x1d.ga4gh.HGVSProjectionResponse\x12M\n\x0eGetHGVSRewrite\x12\x1c.ga4gh.HGVSProjectionRequest\x1a\x1d.ga4gh.HGVSProjectionResponseb\x06proto3')
+  serialized_pb=_b('\n\nhgvs.proto\x12\x05ga4gh\"\x11\n\x0fHGVSInfoRequest\"\x8c\x01\n\x10HGVSInfoResponse\x12\x17\n\x0fpackage_version\x18\x01 \x01(\t\x12\x18\n\x10rest_api_version\x18\x02 \x01(\t\x12\x14\n\x0c\x65val_version\x18\x03 \x01(\t\x12\x11\n\ttimestamp\x18\x04 \x01(\t\x12\x1c\n\x14nomenclature_version\x18\x05 \x01(\t\"!\n\x03Pos\x12\r\n\x05start\x18\x01 \x01(\x03\x12\x0b\n\x03\x65nd\x18\x02 \x01(\x03\"-\n\x16HGVSProjectionResponse\x12\x13\n\x0bhgvs_string\x18\x01 \x01(\t\"\'\n\x10HGVSParseRequest\x12\x13\n\x0bhgvs_string\x18\x01 \x01(\t\"E\n\x11HGVSParseResponse\x12\n\n\x02\x61\x63\x18\x01 \x01(\t\x12\x17\n\x03pos\x18\x02 \x01(\x0b\x32\n.ga4gh.Pos\x12\x0b\n\x03\x61lt\x18\x03 \x01(\t\"8\n\x15HGVSProjectionRequest\x12\x13\n\x0bhgvs_string\x18\x01 \x01(\t\x12\n\n\x02\x61\x63\x18\x02 \x01(\t2\xbb\x02\n\x15HGVSProjectionService\x12>\n\x0bGetHGVSInfo\x12\x16.ga4gh.HGVSInfoRequest\x1a\x17.ga4gh.HGVSInfoResponse\x12P\n\x11GetHGVSValidation\x12\x1c.ga4gh.HGVSProjectionRequest\x1a\x1d.ga4gh.HGVSProjectionResponse\x12\x41\n\x0cGetHGVSParse\x12\x17.ga4gh.HGVSParseRequest\x1a\x18.ga4gh.HGVSParseResponse\x12M\n\x0eGetHGVSRewrite\x12\x1c.ga4gh.HGVSProjectionRequest\x1a\x1d.ga4gh.HGVSProjectionResponseb\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -155,22 +155,8 @@ _HGVSPROJECTIONRESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='ac', full_name='ga4gh.HGVSProjectionResponse.ac', index=0,
+      name='hgvs_string', full_name='ga4gh.HGVSProjectionResponse.hgvs_string', index=0,
       number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='pos', full_name='ga4gh.HGVSProjectionResponse.pos', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='alt', full_name='ga4gh.HGVSProjectionResponse.alt', index=2,
-      number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -188,7 +174,83 @@ _HGVSPROJECTIONRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=218,
-  serialized_end=292,
+  serialized_end=263,
+)
+
+
+_HGVSPARSEREQUEST = _descriptor.Descriptor(
+  name='HGVSParseRequest',
+  full_name='ga4gh.HGVSParseRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='hgvs_string', full_name='ga4gh.HGVSParseRequest.hgvs_string', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=265,
+  serialized_end=304,
+)
+
+
+_HGVSPARSERESPONSE = _descriptor.Descriptor(
+  name='HGVSParseResponse',
+  full_name='ga4gh.HGVSParseResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='ac', full_name='ga4gh.HGVSParseResponse.ac', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='pos', full_name='ga4gh.HGVSParseResponse.pos', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='alt', full_name='ga4gh.HGVSParseResponse.alt', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=306,
+  serialized_end=375,
 )
 
 
@@ -225,15 +287,17 @@ _HGVSPROJECTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=294,
-  serialized_end=350,
+  serialized_start=377,
+  serialized_end=433,
 )
 
-_HGVSPROJECTIONRESPONSE.fields_by_name['pos'].message_type = _POS
+_HGVSPARSERESPONSE.fields_by_name['pos'].message_type = _POS
 DESCRIPTOR.message_types_by_name['HGVSInfoRequest'] = _HGVSINFOREQUEST
 DESCRIPTOR.message_types_by_name['HGVSInfoResponse'] = _HGVSINFORESPONSE
 DESCRIPTOR.message_types_by_name['Pos'] = _POS
 DESCRIPTOR.message_types_by_name['HGVSProjectionResponse'] = _HGVSPROJECTIONRESPONSE
+DESCRIPTOR.message_types_by_name['HGVSParseRequest'] = _HGVSPARSEREQUEST
+DESCRIPTOR.message_types_by_name['HGVSParseResponse'] = _HGVSPARSERESPONSE
 DESCRIPTOR.message_types_by_name['HGVSProjectionRequest'] = _HGVSPROJECTIONREQUEST
 
 HGVSInfoRequest = _reflection.GeneratedProtocolMessageType('HGVSInfoRequest', (_message.Message,), dict(
@@ -263,6 +327,20 @@ HGVSProjectionResponse = _reflection.GeneratedProtocolMessageType('HGVSProjectio
   # @@protoc_insertion_point(class_scope:ga4gh.HGVSProjectionResponse)
   ))
 _sym_db.RegisterMessage(HGVSProjectionResponse)
+
+HGVSParseRequest = _reflection.GeneratedProtocolMessageType('HGVSParseRequest', (_message.Message,), dict(
+  DESCRIPTOR = _HGVSPARSEREQUEST,
+  __module__ = 'hgvs_pb2'
+  # @@protoc_insertion_point(class_scope:ga4gh.HGVSParseRequest)
+  ))
+_sym_db.RegisterMessage(HGVSParseRequest)
+
+HGVSParseResponse = _reflection.GeneratedProtocolMessageType('HGVSParseResponse', (_message.Message,), dict(
+  DESCRIPTOR = _HGVSPARSERESPONSE,
+  __module__ = 'hgvs_pb2'
+  # @@protoc_insertion_point(class_scope:ga4gh.HGVSParseResponse)
+  ))
+_sym_db.RegisterMessage(HGVSParseResponse)
 
 HGVSProjectionRequest = _reflection.GeneratedProtocolMessageType('HGVSProjectionRequest', (_message.Message,), dict(
   DESCRIPTOR = _HGVSPROJECTIONREQUEST,
