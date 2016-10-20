@@ -4,3 +4,4 @@ pytest
 pytest-cov
 tox
 yapf
+hgvs>=0.5.0.dev
