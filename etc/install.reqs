@@ -4,4 +4,6 @@ pytest-html
 flask
 requests
 protobuf
+pysam
+biocommons.seqrepo
 hgvs>=0.5.0.dev
