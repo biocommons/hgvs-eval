@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
-package_name = "biocommons.pkg"
+package_name = "hgvseval"
 short_description = open("doc/short_description.txt").read()
 long_description = open("README.rst").read()
 
