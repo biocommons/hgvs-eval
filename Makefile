@@ -19,12 +19,11 @@ help:
 ############################################################################
 #= SETUP, INSTALLATION, PACKAGING
 
-#=> venv: make a Python 3 virtual environment
+#=> venv: make a Python 2 (for now) virtual environment
 .PHONY: venv
 venv:
-	pyvenv venv; \
+	virtualenv -p python2 venv; \
 	source venv/bin/activate; \
-	python -m ensurepip --upgrade; \
 	pip install --upgrade pip setuptools
 
 #=> setup: setup/upgrade packages *in current environment*

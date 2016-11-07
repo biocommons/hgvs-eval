@@ -20,12 +20,13 @@ def main(argv=sys.argv[1:]):
     parser.add_argument(
         '--html',
         help='Set the HTML output filename',
-        default='report.html'
+        default=None
     )
-    # parser.add_argument(
-    #     '--dir',
-    #     help='Set the local tests directory'
-    # )
+    parser.add_argument(
+        '--json',
+        help='Set the JSON output filename',
+        default=None
+    )
     parser.add_argument("endpoint")
     args = parser.parse_args(argv)
 
@@ -37,12 +38,20 @@ def main(argv=sys.argv[1:]):
 
     test_args = [
         "--endpoint={}".format(args.endpoint),
-        "--html={}".format(args.html),
-        # --json={}
-        "--self-contained-html",
         "--capture=no",
         test_dir,
     ]
+
+    if args.html:
+        test_args += [
+            "--html={}".format(args.html),
+            "--self-contained-html"
+        ]
+
+    if args.json:
+        test_args += [
+            "--json={}".format(args.json),
+        ]
 
     pytest.main(test_args, plugins=[])
 

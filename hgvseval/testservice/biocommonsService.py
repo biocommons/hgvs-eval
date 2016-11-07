@@ -1,5 +1,5 @@
 import hgvseval
-from interface import HGVSTestService
+from .interface import HGVSTestService
 
 import hgvs.dataproviders.uta
 import hgvs.parser

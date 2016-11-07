@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
-package_name = "biocommons.pkg"
+package_name = "hgvseval"
 short_description = open("doc/short_description.txt").read()
 long_description = open("README.rst").read()
 
@@ -51,24 +51,29 @@ setup(
 
     install_requires = [
         "flask",
+        "protobuf",
+        "requests",
         "six",
-    ],
 
-    setup_requires = [
+        # Given the way we're using pytest, these belong in
+        # install_requires (usually in setup_requires and
+        # tests_require)
         "pytest",
         "pytest-runner",
         "pytest-json",
         "pytest-html",
+
+        # hgvs -- should probably move to extras_require eventually
+        "hgvs>=0.5dev",
+        "biocommons.seqrepo",
+    ],
+
+    setup_requires = [
         "setuptools_scm",
-        "requests",
-        "protobuf",
         "wheel",
     ],
 
     tests_require = [
-        "pytest",
-        "pytest-cov",
-        "tox",
     ],
 )
 
