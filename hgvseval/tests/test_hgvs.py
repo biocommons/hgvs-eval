@@ -33,8 +33,8 @@ def test_criteria(endpoint, criteria):
     print "Testing HGVS operation on: {}".format(url)
     res = requests.post(
         url,
-        data=json.dumps({
+        data={
             'ac': criteria['output_accepted'].split(':')[0],
-            'hgvsString': criteria['input']
-        }))
+            'hgvs_string': criteria['input']
+        })
     print res.json()
