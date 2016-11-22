@@ -45,6 +45,8 @@ def pytest_generate_tests(metafunc):
                 if not header:
                     header = row
                     continue
+                if row[0].startswith("#"):
+                    continue
                 criterias.append(
                     dict(zip(header, row))
                 )

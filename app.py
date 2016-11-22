@@ -110,7 +110,9 @@ def project_t_to_g():
     sequence specified by ac, returning g. hgvs string
     Transcripts may be coding or non-coding.
     """
-    hgvs_string = bs.project_t_to_g(hgvs_string=request["hgvs_string"], ac=request["ac"])
+    in_hgvs_string = request.form.get("hgvs_string")
+    in_ac = request.form.get("ac")
+    hgvs_string = bs.project_t_to_g(hgvs_string=in_hgvs_string, ac=in_ac)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
