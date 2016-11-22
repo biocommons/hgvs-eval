@@ -37,4 +37,17 @@ def test_criteria(endpoint, criteria):
             'ac': criteria['output_accepted'].split(':')[0],
             'hgvs_string': criteria['input']
         })
-    print res.json()
+    result = res.json()
+    result_hgvs = result['hgvsString']
+    
+    passed = False
+    ac_list = criteria['output_accepted'].split('|')
+    for accepted_output in ac_list:
+        if(result_hgvs == accepted_output):
+            passed = True
+
+    assert passed
+
+    
+        
+    
