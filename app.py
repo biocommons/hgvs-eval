@@ -123,8 +123,24 @@ def project_c_to_p():
     protein sequence, returning a p. hgvs string.
     Transcripts may be coding or non-coding.
     """
-    req = _getProjectionRequest()
-    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
+    hgvs_string = request.form.get("hgvs_string")
+    #ac = request.form.get("ac")
+    hgvs_string = bs.project_c_to_p(hgvs_string=hgvs_string)
+    #req = _getProjectionRequest()
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    return MessageToJson(resp)
+
+
+@app.route('/project_c_to_n', methods=['POST'])
+def project_c_to_n():
+    """projects c. hgvs_string onto non-coding
+    sequence specified by ac, returning n. hgvs string
+    """
+    hgvs_string = request.form.get("hgvs_string")
+    ac = request.form.get("ac")
+    hgvs_string = bs.project_c_to_n(hgvs_string=hgvs_string, ac=ac)
+    #req = _getProjectionRequest()
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
 

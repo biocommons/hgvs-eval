@@ -40,6 +40,11 @@ class BiocommonsService(HGVSTestService):
         var_p = BiocommonsService.vm.c_to_p(var_c)
         return str(var_p)
 
+    def project_c_to_n(self, hgvs_string):
+        var_c = BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
+        var_n = BiocommonsService.vm.c_to_n(var_c)
+        return str(var_n)
+
     def rewrite(self, hgvs_string):
         curr_var =  BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
         norm_var = BiocommonsService.hn.normalize(curr_var)
