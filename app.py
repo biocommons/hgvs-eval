@@ -53,7 +53,9 @@ def validate():
 
 @app.route('/parse', methods=['POST'])
 def parse():
-    """ implements:
+    """Breaks down HGVS expression into parts
+
+	implements:
         service HGVSProjectionService {
           rpc GetHGVSParse(HGVSProjectionRequest)
               returns (HGVSProjectionResponse);
@@ -106,13 +108,13 @@ def project_g_to_t():
 
 @app.route('/project_t_to_g', methods=['POST'])
 def project_t_to_g():
-    """projects transcript (c. or n.) variant hgvs_string onto genomic
-    sequence specified by ac, returning g. hgvs string
+    """projects transcript (c. or n.) variant hgvs_string onto 
+    genomic sequence specified by ac, returning g. hgvs string
     Transcripts may be coding or non-coding.
     """
-    in_hgvs_string = request.form.get("hgvs_string")
-    in_ac = request.form.get("ac")
-    hgvs_string = bs.project_t_to_g(hgvs_string=in_hgvs_string, ac=in_ac)
+    hgvs_string = request.form.get("hgvs_string")
+    ac = request.form.get("ac")
+    hgvs_string = bs.project_t_to_g(hgvs_string=hgvs_string, ac=ac)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
@@ -124,9 +126,7 @@ def project_c_to_p():
     Transcripts may be coding or non-coding.
     """
     hgvs_string = request.form.get("hgvs_string")
-    #ac = request.form.get("ac")
     hgvs_string = bs.project_c_to_p(hgvs_string=hgvs_string)
-    #req = _getProjectionRequest()
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
@@ -134,12 +134,21 @@ def project_c_to_p():
 @app.route('/project_c_to_n', methods=['POST'])
 def project_c_to_n():
     """projects c. hgvs_string onto non-coding
-    sequence specified by ac, returning n. hgvs string
+    sequence, returning n. hgvs string
     """
     hgvs_string = request.form.get("hgvs_string")
-    ac = request.form.get("ac")
-    hgvs_string = bs.project_c_to_n(hgvs_string=hgvs_string, ac=ac)
-    #req = _getProjectionRequest()
+    hgvs_string = bs.project_c_to_n(hgvs_string=hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    return MessageToJson(resp)
+
+
+@app.route('/project_n_to_c', methods=['POST'])
+def project_n_to_c():
+    """projects n. hgvs_string onto coding
+    sequence, returning c. hgvs string
+    """
+    hgvs_string = request.form.get("hgvs_string")
+    hgvs_string = bs.project_n_to_c(hgvs_string=hgvs_string)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
