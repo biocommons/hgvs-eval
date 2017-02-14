@@ -86,8 +86,10 @@ def rewrite():
           "hgvsString": "todo"
         }
     """
-    req = _getProjectionRequest()
-    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
+    hgvs_string = request.form.get("hgvs_string")
+    hgvs_string = bs.rewrite(hgvs_string=hgvs_string)
+    #req = _getProjectionRequest()
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
 
@@ -100,7 +102,7 @@ def project_g_to_t():
 
     hgvs_string = request.form.get("hgvs_string")
     ac = request.form.get("ac")
-    print("project_g_to_t({}, {})".format(hgvs_string, ac))
+    #print("project_g_to_t({}, {})".format(hgvs_string, ac)) # where does this print?
     hgvs_string = bs.project_g_to_t(hgvs_string=hgvs_string, ac=ac)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)

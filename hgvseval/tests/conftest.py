@@ -29,7 +29,7 @@ def pytest_generate_tests(metafunc):
             arg['feature'],
             arg['operation'],
             arg['name'],
-            hashlib.md5(arg['input']).hexdigest()
+	    arg['input']
         ])
 
     if 'criteria' in metafunc.fixturenames:

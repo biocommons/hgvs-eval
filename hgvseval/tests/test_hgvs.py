@@ -8,7 +8,7 @@ def test_info(endpoint):
     url = urljoin(endpoint, 'info')
     print "Testing HGVS service info endpoint on: {}".format(url)
     res = requests.get(url)
-    print res.json()
+    print res.json() # prints to command line but not to report
     assert 1 == 1
 
 
@@ -37,6 +37,8 @@ def test_criteria(endpoint, criteria):
             'ac': criteria['output_accepted'].split(':')[0],
             'hgvs_string': criteria['input']
         })
+
+    print res.json() # prints to command line but not to report
     result = res.json()
     result_hgvs = result['hgvsString']
     
@@ -45,9 +47,6 @@ def test_criteria(endpoint, criteria):
     for accepted_output in ac_list:
         if(result_hgvs == accepted_output):
             passed = True
+	    #print(result_hgvs)
 
     assert passed
-
-    
-        
-    
