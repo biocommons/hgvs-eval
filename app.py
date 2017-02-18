@@ -46,8 +46,11 @@ def validate():
           "hgvsString": "todo"
         }
     """
-    req = _getProjectionRequest()
-    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
+    hgvs_string = request.form.get("hgvs_string")
+    hgvs_string = bs.validate(hgvs_string=hgvs_string)
+    #req = _getProjectionRequest()
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    #resp = _createProjectionResponse(hgvs_string='todo')
     return MessageToJson(resp)
 
 

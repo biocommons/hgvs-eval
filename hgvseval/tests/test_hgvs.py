@@ -2,7 +2,6 @@ import requests
 import json
 from urlparse import urljoin
 
-
 def test_info(endpoint):
     """Tests the info endpoint for the given service."""
     url = urljoin(endpoint, 'info')
@@ -31,10 +30,11 @@ def test_criteria(endpoint, criteria):
     """
     url = urljoin(endpoint, criteria['operation'])
     print "Testing HGVS operation on: {}".format(url)
-    res = requests.post(
+
+    res = requests.post( # This is sending the data to test each test case
         url,
         data={
-            'ac': criteria['output_accepted'].split(':')[0],
+            'ac': criteria['output_accepted'].split(':')[0], # Gets 1st accession number encountered
             'hgvs_string': criteria['input']
         })
 

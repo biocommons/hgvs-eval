@@ -42,10 +42,10 @@ def pytest_generate_tests(metafunc):
             infile = csv.reader(f, delimiter='\t')
             header = None
             for row in infile:
-                if not header:
+                if not header: # skip header
                     header = row
                     continue
-                if row[0].startswith("#"):
+                if row[0].startswith("#"): # skip if test is commented out
                     continue
                 criterias.append(
                     dict(zip(header, row))

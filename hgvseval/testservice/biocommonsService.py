@@ -5,6 +5,7 @@ import hgvs.dataproviders.uta
 import hgvs.parser
 import hgvs.variantmapper
 import hgvs.normalizer
+import hgvs.validator
 import datetime
 
 class BiocommonsService(HGVSTestService):
@@ -12,7 +13,8 @@ class BiocommonsService(HGVSTestService):
     hdp = hgvs.dataproviders.uta.connect()
     vm = hgvs.variantmapper.VariantMapper(hdp)
     hn = hgvs.normalizer.Normalizer(hdp)
-    
+    val = hgvs.validator.Validator(hdp)
+
     def __init__(self):
         pass
     
@@ -56,10 +58,10 @@ class BiocommonsService(HGVSTestService):
         return str(norm_var)
 
     def validate(self, hgvs_string):
-        # ability to rewrite without exception being used as proxy for validate     
-        try:
-            self.rewrite(hgvs_string)
-            return True
-        except Exeption:
-            return False
-	
+	try:
+	    curr_var = BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
+	    validate_var = BiocommonsService.val.validate(curr_var)
+	    return str(validate_var)
+	except Exception:
+	    return 'False'
+
