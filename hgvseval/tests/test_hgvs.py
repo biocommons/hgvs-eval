@@ -38,15 +38,15 @@ def test_criteria(endpoint, criteria):
             'hgvs_string': criteria['input']
         })
 
-    print res.json() # prints to command line but not to report
+    #print res.json() # prints to command line but not to report
     result = res.json()
     result_hgvs = result['hgvsString']
-    
+    #print(result_hgvs) # This is just what is returned from the test  
+ 
     passed = False
     ac_list = criteria['output_accepted'].split('|')
     for accepted_output in ac_list:
         if(result_hgvs == accepted_output):
             passed = True
-	    #print(result_hgvs)
 
     assert passed
