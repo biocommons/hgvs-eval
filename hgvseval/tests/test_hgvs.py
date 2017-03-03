@@ -7,7 +7,7 @@ def test_info(endpoint):
     url = urljoin(endpoint, 'info')
     print "Testing HGVS service info endpoint on: {}".format(url)
     res = requests.get(url)
-    print res.json() # prints to command line but not to report
+    #print res.json() # prints to command line but not to report
     assert 1 == 1
 
 
@@ -30,15 +30,16 @@ def test_criteria(endpoint, criteria):
     """
     url = urljoin(endpoint, criteria['operation'])
     print "Testing HGVS operation on: {}".format(url)
-
+    
     res = requests.post( # This is sending the data to test each test case
         url,
+        # TODO: I think this is where Mutalyzer is messing up because it only wants the hgvs_string 
         data={
             'ac': criteria['output_accepted'].split(':')[0], # Gets 1st accession number encountered
             'hgvs_string': criteria['input']
         })
 
-    #print res.json() # prints to command line but not to report
+    #print res.json() # prints result from tool to command line but not to report
     result = res.json()
     result_hgvs = result['hgvsString']
     #print(result_hgvs) # This is just what is returned from the test  

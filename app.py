@@ -7,11 +7,12 @@ from google.protobuf.json_format import MessageToJson, Parse, ParseDict
 import json
 import hgvseval.messages_pb2 as hm
 from hgvseval.testservice.biocommonsService import BiocommonsService
+from hgvseval.testservice.mutalyzerService import MutalyzerService 
 import os
 
 logger = logging.getLogger(__name__)
 bs = BiocommonsService()
-
+mut = MutalyzerService()
 app = Flask(__name__)
 CORS(app)
 
@@ -29,9 +30,15 @@ def info():
     }
     """
     resp = ParseDict(bs.info(), hm.HGVSInfoResponse())
+    mut_resp = ParseDict(mut.info(), hm.HGVSInfoResponse())
+    tools_info_resp = [resp, mut_resp]
+    for i in range(0, len(tools_info_resp)):
+        tools_info_resp[i] = json.loads(MessageToJson(tools_info_resp[i]))
+    return json.dumps(tools_info_resp)
+    # This does the same thing as the for loop but in 1 line
+    #return json.dumps(map(lambda r: json.loads(MessageToJson(r)), tools_info_resp))
     return MessageToJson(resp)
-
-
+    
 @app.route('/validate', methods=['POST'])
 def validate():
     """ implements:
@@ -69,6 +76,8 @@ def parse():
         {
           "hgvsString": "todo"
         }
+
+        VMC Data Model?
     """
     req = _getProjectionRequest()
     resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
@@ -102,14 +111,20 @@ def project_g_to_t():
     specified by ac, returning a c. or n. hgvs string
     Transcripts may be coding or non-coding.
     """
-
     hgvs_string = request.form.get("hgvs_string")
-    ac = request.form.get("ac")
+    #ac = request.form.get("ac")
     #print("project_g_to_t({}, {})".format(hgvs_string, ac)) # where does this print?
-    hgvs_string = bs.project_g_to_t(hgvs_string=hgvs_string, ac=ac)
-    resp = _createProjectionResponse(hgvs_string=hgvs_string)
-    return MessageToJson(resp)
-
+    #bs_hgvs_string = bs.project_g_to_t(hgvs_string=hgvs_string, ac=ac)
+    mut_hgvs_string = mut.project_g_to_t(input_hgvs=hgvs_string)
+    #resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
+    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
+    return MessageToJson(mut_resp)
+'''
+    tools_info_resp = [resp, mut_resp]
+    for i in range(0, len(tools_info_resp)):
+        tools_info_resp[i] = json.loads(MessageToJson(tools_info_resp[i]))
+    return json.dumps(tools_info_resp)
+'''
 
 @app.route('/project_t_to_g', methods=['POST'])
 def project_t_to_g():
@@ -119,8 +134,10 @@ def project_t_to_g():
     """
     hgvs_string = request.form.get("hgvs_string")
     ac = request.form.get("ac")
-    hgvs_string = bs.project_t_to_g(hgvs_string=hgvs_string, ac=ac)
-    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    bs_hgvs_string = bs.project_t_to_g(hgvs_string=hgvs_string, ac=ac)
+    mut_hgvs_string = mut.project_t_to_g(input_hgvs=hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
+    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
     return MessageToJson(resp)
 
 
@@ -131,8 +148,10 @@ def project_c_to_p():
     Transcripts may be coding or non-coding.
     """
     hgvs_string = request.form.get("hgvs_string")
-    hgvs_string = bs.project_c_to_p(hgvs_string=hgvs_string)
-    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    bs_hgvs_string = bs.project_c_to_p(hgvs_string=hgvs_string)
+    mut_hgvs_string = mut.project_c_to_p(input_hgvs=hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
+    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
     return MessageToJson(resp)
 
 
