@@ -57,9 +57,12 @@ def validate():
     hgvs_string = bs.validate(hgvs_string=hgvs_string)
     #req = _getProjectionRequest()
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
-    #resp = _createProjectionResponse(hgvs_string='todo')
     return MessageToJson(resp)
-
+    # Not sure if I should use runMutalyzer or checkSyntax here for Mutalyzer?
+'''
+    mut_hgvs_string = mut.runMutalyzer(input_hgvs=hgvs_string)
+    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
+'''
 
 @app.route('/parse', methods=['POST'])
 def parse():
@@ -103,6 +106,7 @@ def rewrite():
     #req = _getProjectionRequest()
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
+    # Would this call runMutalyzer to test Mutalyzer?
 
 
 @app.route('/project_g_to_t', methods=['POST'])
@@ -119,11 +123,12 @@ def project_g_to_t():
     #resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
     mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
     return MessageToJson(mut_resp)
+    #return MessageToJson(resp)
 '''
-    tools_info_resp = [resp, mut_resp]
-    for i in range(0, len(tools_info_resp)):
-        tools_info_resp[i] = json.loads(MessageToJson(tools_info_resp[i]))
-    return json.dumps(tools_info_resp)
+    tools_g_to_t_resp = [resp, mut_resp]
+    for i in range(0, len(tools_g_to_t_resp)):
+        tools_g_to_t_resp[i] = json.loads(MessageToJson(tools_g_to_t_resp[i]))
+    return json.dumps(tools_g_to_t_resp)
 '''
 
 @app.route('/project_t_to_g', methods=['POST'])
@@ -139,6 +144,12 @@ def project_t_to_g():
     resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
     mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
     return MessageToJson(resp)
+'''
+    tools_t_to_g_resp = [resp, mut_resp]
+    for i in range(0, len(tools_t_to_g_resp)):
+        tools_t_to_g_resp[i] = json.loads(MessageToJson(tools_t_to_g_resp[i]))
+    return json.dumps(tools_t_to_g_resp)
+'''
 
 
 @app.route('/project_c_to_p', methods=['POST'])
@@ -153,6 +164,12 @@ def project_c_to_p():
     resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
     mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
     return MessageToJson(resp)
+'''
+    tools_c_to_p_resp = [resp, mut_resp]
+    for i in range(0, len(tools_c_to_p_resp)):
+        tools_c_to_p_resp[i] = json.loads(MessageToJson(tools_c_to_p_resp[i]))
+    return json.dumps(tools_c_to_p_resp)
+'''
 
 
 @app.route('/project_c_to_n', methods=['POST'])
@@ -161,9 +178,17 @@ def project_c_to_n():
     sequence, returning n. hgvs string
     """
     hgvs_string = request.form.get("hgvs_string")
-    hgvs_string = bs.project_c_to_n(hgvs_string=hgvs_string)
-    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    bs_hgvs_string = bs.project_c_to_n(hgvs_string=hgvs_string)
+    mut_hgvs_string = mut.project_c_to_n(input_hgvs=hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
+    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
     return MessageToJson(resp)
+'''
+    tools_c_to_n_resp = [resp, mut_resp]
+    for i in range(0, len(tools_c_to_n_resp)):
+        tools_c_to_n_resp[i] = json.loads(MessageToJson(tools_c_to_n_resp[i]))
+    return json.dumps(tools_c_to_n_resp)
+'''
 
 
 @app.route('/project_n_to_c', methods=['POST'])
@@ -172,9 +197,17 @@ def project_n_to_c():
     sequence, returning c. hgvs string
     """
     hgvs_string = request.form.get("hgvs_string")
-    hgvs_string = bs.project_n_to_c(hgvs_string=hgvs_string)
-    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    bs_hgvs_string = bs.project_n_to_c(hgvs_string=hgvs_string)
+    mut_hgvs_string = mut.project_n_to_c(input_hgvs=hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
+    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
     return MessageToJson(resp)
+'''
+    tools_n_to_c_resp = [resp, mut_resp]
+    for i in range(0, len(tools_n_to_c_resp)):
+        tools_n_to_c_resp[i] = json.loads(MessageToJson(tools_n_to_c_resp[i]))
+    return json.dumps(tools_n_to_c_resp)
+'''
 
 
 @app.route("/api")

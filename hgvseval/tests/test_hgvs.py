@@ -39,15 +39,28 @@ def test_criteria(endpoint, criteria):
             'hgvs_string': criteria['input']
         })
 
-    #print res.json() # prints result from tool to command line but not to report
+    print res.json() # prints result from tool to command line but not to report
     result = res.json()
     result_hgvs = result['hgvsString']
-    #print(result_hgvs) # This is just what is returned from the test  
- 
+    print(result_hgvs) # This is just what is returned from the test  
+
     passed = False
-    ac_list = criteria['output_accepted'].split('|')
-    for accepted_output in ac_list:
-        if(result_hgvs == accepted_output):
-            passed = True
+    # TODO: If result_hgvs has commas, split and make sure to look at each one 
+    # to see if it matches the answer
+    hgvs_vars = {}
+    if "," in result_hgvs:
+        my_hgvs_arr = result_hgvs.split(',')
+        for h in my_hgvs_arr:
+            hgvs_vars[h] = 1
+        #print hgvs_vars
+        ac_list = criteria['output_accepted'].split('|')
+        for accepted_output in ac_list:
+            if accepted_output in hgvs_vars:
+                passed = True
+    else:
+        ac_list = criteria['output_accepted'].split('|')
+        for accepted_output in ac_list:
+            if(result_hgvs == accepted_output):
+                passed = True
 
     assert passed
