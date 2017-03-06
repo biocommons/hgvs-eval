@@ -21,7 +21,7 @@ class MutalyzerService(HGVSTestService):
         }
 
 
-    def project_g_to_t(input_hgvs):
+    def project_g_to_t(self, input_hgvs):
         # as of 20161017 only hg19 is supposed by mutalyzer SOAP
         # numberConversion - converts I{c.} to I{g.} and vice versa
         r = MutalyzerService.o.numberConversion('hg19', input_hgvs)
@@ -30,7 +30,7 @@ class MutalyzerService(HGVSTestService):
         #return [str(hgvs) for hgvs in r.string]
 
 
-    def project_t_to_g(input_hgvs):
+    def project_t_to_g(self, input_hgvs):
         # as of 20161017 only hg19 is supposed by mutalyzer SOAP
         r = MutalyzerService.o.numberConversion('hg19', input_hgvs)
         for hgvs in r.string:
@@ -38,7 +38,7 @@ class MutalyzerService(HGVSTestService):
         #return [str(hgvs) for hgvs in r.string]
 
 
-    def project_c_to_p(input_hgvs):
+    def project_c_to_p(self, input_hgvs):
 	# Should the same output given by different methods be compared?
 	# Ex. transcripts given by runMutalyzer and numberConversion
         r = MutalyzerService.o.runMutalyzer(input_hgvs)
@@ -46,11 +46,11 @@ class MutalyzerService(HGVSTestService):
 	    print hgvs 
 
 
-    def project_n_to_c(input_hgvs):
+    def project_n_to_c(self, input_hgvs):
         pass
 
-    def project_c_to_n(input_hgvs):
+    def project_c_to_n(self, input_hgvs):
         pass
 
-    def rewrite(input_hgvs):
+    def rewrite(self, input_hgvs):
         pass
