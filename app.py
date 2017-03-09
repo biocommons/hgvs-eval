@@ -6,15 +6,34 @@ from flask_cors import CORS
 from google.protobuf.json_format import MessageToJson, Parse, ParseDict
 import json
 import hgvseval.messages_pb2 as hm
-from hgvseval.testservice.biocommonsService import BiocommonsService
-from hgvseval.testservice.mutalyzerService import MutalyzerService 
 import os
 
+import sys
+import argparse
+import importlib
+
 logger = logging.getLogger(__name__)
-bs = BiocommonsService()
-mut = MutalyzerService()
 app = Flask(__name__)
 CORS(app)
+
+tools = {
+    'Biocommons':['hgvseval.testservice.biocommonsService', 'BiocommonsService'],
+    'Mutalyzer':['hgvseval.testservice.mutalyzerService', 'MutalyzerService']
+}
+
+tool = sys.argv[1].split('=')[1].title()
+if tool in tools:
+    package = tools[tool][0]
+    name = tools[tool][1]
+    my_module = importlib.import_module(package)
+    class_ = getattr(my_module, name)
+    service = class_()
+else:
+    print('Tool not supported. Please pick from list of supported tools:')
+    supported_tools = tools.keys()
+    supported_tools.sort()
+    for t in supported_tools:
+        print(t) 
 
 
 @app.route('/info', methods=['GET'])
@@ -29,6 +48,9 @@ def info():
       "packageVersion": "dummy-package-version"
     }
     """
+    resp = ParseDict(service.info(), hm.HGVSInfoResponse())
+    return MessageToJson(resp) 
+    '''
     resp = ParseDict(bs.info(), hm.HGVSInfoResponse())
     mut_resp = ParseDict(mut.info(), hm.HGVSInfoResponse())
     tools_info_resp = [resp, mut_resp]
@@ -37,8 +59,9 @@ def info():
     return json.dumps(tools_info_resp)
     # This does the same thing as the for loop but in 1 line
     #return json.dumps(map(lambda r: json.loads(MessageToJson(r)), tools_info_resp))
-    return MessageToJson(resp)
-    
+    '''    
+
+
 @app.route('/validate', methods=['POST'])
 def validate():
     """ implements:
@@ -53,16 +76,12 @@ def validate():
           "hgvsString": "todo"
         }
     """
+    # Not sure if I should use runMutalyzer or checkSyntax here for Mutalyzer?
     hgvs_string = request.form.get("hgvs_string")
-    hgvs_string = bs.validate(hgvs_string=hgvs_string)
-    #req = _getProjectionRequest()
+    hgvs_string = service.validate(hgvs_string=hgvs_string)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
-    # Not sure if I should use runMutalyzer or checkSyntax here for Mutalyzer?
-'''
-    mut_hgvs_string = mut.runMutalyzer(input_hgvs=hgvs_string)
-    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
-'''
+
 
 @app.route('/parse', methods=['POST'])
 def parse():
@@ -101,12 +120,12 @@ def rewrite():
           "hgvsString": "todo"
         }
     """
+    # TODO: Would this call runMutalyzer to test Mutalyzer?
     hgvs_string = request.form.get("hgvs_string")
-    hgvs_string = bs.rewrite(hgvs_string=hgvs_string)
+    hgvs_string = service.rewrite(hgvs_string=hgvs_string)
     #req = _getProjectionRequest()
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
-    # Would this call runMutalyzer to test Mutalyzer?
 
 
 @app.route('/project_g_to_t', methods=['POST'])
@@ -116,20 +135,12 @@ def project_g_to_t():
     Transcripts may be coding or non-coding.
     """
     hgvs_string = request.form.get("hgvs_string")
-    #ac = request.form.get("ac")
+    ac = request.form.get("ac")
     #print("project_g_to_t({}, {})".format(hgvs_string, ac)) # where does this print?
-    #bs_hgvs_string = bs.project_g_to_t(hgvs_string=hgvs_string, ac=ac)
-    mut_hgvs_string = mut.project_g_to_t(input_hgvs=hgvs_string)
-    #resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
-    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
-    return MessageToJson(mut_resp)
-    #return MessageToJson(resp)
-'''
-    tools_g_to_t_resp = [resp, mut_resp]
-    for i in range(0, len(tools_g_to_t_resp)):
-        tools_g_to_t_resp[i] = json.loads(MessageToJson(tools_g_to_t_resp[i]))
-    return json.dumps(tools_g_to_t_resp)
-'''
+    hgvs_string = service.project_g_to_t(hgvs_string=hgvs_string, ac=ac)
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
+    return MessageToJson(resp)
+
 
 @app.route('/project_t_to_g', methods=['POST'])
 def project_t_to_g():
@@ -139,17 +150,9 @@ def project_t_to_g():
     """
     hgvs_string = request.form.get("hgvs_string")
     ac = request.form.get("ac")
-    bs_hgvs_string = bs.project_t_to_g(hgvs_string=hgvs_string, ac=ac)
-    mut_hgvs_string = mut.project_t_to_g(input_hgvs=hgvs_string)
-    resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
-    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
+    hgvs_string = service.project_t_to_g(hgvs_string=hgvs_string, ac=ac)
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
-'''
-    tools_t_to_g_resp = [resp, mut_resp]
-    for i in range(0, len(tools_t_to_g_resp)):
-        tools_t_to_g_resp[i] = json.loads(MessageToJson(tools_t_to_g_resp[i]))
-    return json.dumps(tools_t_to_g_resp)
-'''
 
 
 @app.route('/project_c_to_p', methods=['POST'])
@@ -159,17 +162,9 @@ def project_c_to_p():
     Transcripts may be coding or non-coding.
     """
     hgvs_string = request.form.get("hgvs_string")
-    bs_hgvs_string = bs.project_c_to_p(hgvs_string=hgvs_string)
-    mut_hgvs_string = mut.project_c_to_p(input_hgvs=hgvs_string)
-    resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
-    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
+    hgvs_string = service.project_c_to_p(hgvs_string=hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
-'''
-    tools_c_to_p_resp = [resp, mut_resp]
-    for i in range(0, len(tools_c_to_p_resp)):
-        tools_c_to_p_resp[i] = json.loads(MessageToJson(tools_c_to_p_resp[i]))
-    return json.dumps(tools_c_to_p_resp)
-'''
 
 
 @app.route('/project_c_to_n', methods=['POST'])
@@ -178,17 +173,9 @@ def project_c_to_n():
     sequence, returning n. hgvs string
     """
     hgvs_string = request.form.get("hgvs_string")
-    bs_hgvs_string = bs.project_c_to_n(hgvs_string=hgvs_string)
-    mut_hgvs_string = mut.project_c_to_n(input_hgvs=hgvs_string)
-    resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
-    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
+    hgvs_string = service.project_c_to_n(hgvs_string=hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
-'''
-    tools_c_to_n_resp = [resp, mut_resp]
-    for i in range(0, len(tools_c_to_n_resp)):
-        tools_c_to_n_resp[i] = json.loads(MessageToJson(tools_c_to_n_resp[i]))
-    return json.dumps(tools_c_to_n_resp)
-'''
 
 
 @app.route('/project_n_to_c', methods=['POST'])
@@ -197,17 +184,9 @@ def project_n_to_c():
     sequence, returning c. hgvs string
     """
     hgvs_string = request.form.get("hgvs_string")
-    bs_hgvs_string = bs.project_n_to_c(hgvs_string=hgvs_string)
-    mut_hgvs_string = mut.project_n_to_c(input_hgvs=hgvs_string)
-    resp = _createProjectionResponse(hgvs_string=bs_hgvs_string)
-    mut_resp = _createProjectionResponse(hgvs_string=mut_hgvs_string)
+    hgvs_string = service.project_n_to_c(hgvs_string=hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
-'''
-    tools_n_to_c_resp = [resp, mut_resp]
-    for i in range(0, len(tools_n_to_c_resp)):
-        tools_n_to_c_resp[i] = json.loads(MessageToJson(tools_n_to_c_resp[i]))
-    return json.dumps(tools_n_to_c_resp)
-'''
 
 
 @app.route("/api")
@@ -257,4 +236,7 @@ def _createProjectionResponse(hgvs_string=None):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--tool', help='Name of tool to test')
+    # TODO: If tool not given, print message Must give tool from list
     app.run(debug=True, host='0.0.0.0', port=8000)  # TODO - add config class

@@ -52,9 +52,10 @@ def test_criteria(endpoint, criteria):
         my_hgvs_arr = result_hgvs.split(',')
         for h in my_hgvs_arr:
             hgvs_vars[h] = 1
-        #print hgvs_vars
+        print hgvs_vars
         ac_list = criteria['output_accepted'].split('|')
         for accepted_output in ac_list:
+            print accepted_output
             if accepted_output in hgvs_vars:
                 passed = True
     else:

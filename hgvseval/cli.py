@@ -10,6 +10,7 @@ import json
 import csv
 import jinja2
 
+
 def main(argv=sys.argv[1:]):
     """Main entry-point for HGVS-eval CLI."""
     parser = argparse.ArgumentParser()
@@ -53,7 +54,7 @@ def main(argv=sys.argv[1:]):
         test_args += [
             "--json={}".format(args.json),
         ]
-
+    
     pytest.main(test_args, plugins=[])
 
     test_outcomes = {}
