@@ -24,7 +24,7 @@ class BiocommonsService(HGVSTestService):
             "rest_api_version": None,
             "eval_version": hgvseval.__version__,
             "timestamp": '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()),
-            "nomenclature_version": 'yeah, right',
+            #"nomenclature_version": 'yeah, right',
             }
 
     def project_t_to_g(self, hgvs_string, ac):

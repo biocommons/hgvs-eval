@@ -60,7 +60,8 @@ Download the package and prepare your environment::
 
   $ git clone https://github.com/biocommons/hgvs-eval.git
   $ cd hgvs-eval
-  $ make devready
+  $ sudo apt install libpq-dev
+  $ make -s devready
   $ source venv/bin/activate
 
 If you have local instances of UTA and seqrepo, enable them with::
@@ -71,7 +72,11 @@ If you have local instances of UTA and seqrepo, enable them with::
 
 Launch the REST service for biocommons/hgvs::
 
-  $ python app.py &
+  $ python app.py Biocommons &
+
+Display all supported tools::
+
+  $ python app.py --help
 
 A quick test::
 

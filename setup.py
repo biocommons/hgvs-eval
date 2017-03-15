@@ -66,6 +66,9 @@ setup(
         # hgvs -- should probably move to extras_require eventually
         "hgvs>=0.5dev",
         "biocommons.seqrepo",
+    
+        # This might belong in tests_require
+        "suds",
     ],
 
     setup_requires = [

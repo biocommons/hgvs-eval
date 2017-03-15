@@ -33,7 +33,6 @@ def test_criteria(endpoint, criteria):
     
     res = requests.post( # This is sending the data to test each test case
         url,
-        # TODO: I think this is where Mutalyzer is messing up because it only wants the hgvs_string 
         data={
             'ac': criteria['output_accepted'].split(':')[0], # Gets 1st accession number encountered
             'hgvs_string': criteria['input']

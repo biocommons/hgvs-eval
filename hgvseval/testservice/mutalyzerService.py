@@ -1,6 +1,7 @@
 from interface import HGVSTestService
 from suds.client import Client
 import datetime
+import re
 
 class MutalyzerService(HGVSTestService):
     url = 'https://mutalyzer.nl/services/?wsdl'
@@ -66,32 +67,61 @@ class MutalyzerService(HGVSTestService):
     def rewrite(self, hgvs_string):
         #r = MutalyzerService.o.runMutalzyer(input_hgvs)
         # How would this know what type of hgvs variant it got(g.,c.,p.)? 
-        pass
+        r = MutalyzerService.o.runMutalyzer(hgvs_string)
+        all_hgvs = []
+        all_hgvs.append(r.genomicDescription)
+        all_hgvs.extend(r.proteinDescriptions.string)
+        all_hgvs.extend(r.transcriptDescriptions.string)
+        all_hgvs_str = ",".join(all_hgvs)
+        return all_hgvs_str
 
 
     def validate(self, hgvs_string):
-	# checkSyntax or runMutalyzer
-        # How would this know what type of hgvs variant it got if we used runMutalyzer(g.,c.,p.)? 
+	# runMutalyzer (Run the Mutalyzer name checker)
+        # How would this know what type of hgvs variant it got if we used runMutalyzer(g.,c.,p.)?
+        # I could pull in all HGVS descriptions returned and iterate through them
+        ''' 
         r = MutalyzerService.o.checkSyntax(hgvs_string)
         return str(r.valid)
         '''
-        curr_var = input_hgvs
-	r = MutalyzerService.o.runMutalyzer(input_hgvs)
-        if curr_var == returned_hgvs:
+        curr_var = hgvs_string
+	r = MutalyzerService.o.runMutalyzer(hgvs_string)
+        all_hgvs = {}
+        hgvs_list = []
+        # Going to assume this won't have any (). This might be a bad assumption.
+        # Also assuming this is always a string
+        all_hgvs[r.genomicDescription] = 1
+        hgvs_list.extend(r.proteinDescriptions.string)
+        hgvs_list.extend(r.transcriptDescriptions.string)
+        r = re.compile("([A-Z0-9a-z_:\.]*)(\(.*?\).*?)?(.*)")
+        for h in hgvs_list:
+            match = re.search(r, h)
+            all_hgvs[match.group(1)+match.group(3)] = 1
+        if curr_var in all_hgvs:
 	    return 'True'
 	else:
 	    return 'False'
- 
-        '''
-
 
 '''
 # For testing mutalyzerService.py
 if __name__ == '__main__':
     mut = MutalyzerService()
-    print mut.validate('NC_01234.5:c.1A>G')
-    print mut.project_g_to_t('NC_000020.10:g.278701_278703delGGC')
-    print mut.project_g_to_t('NC_000023.10:g.73501562T>C')
+    print("rewrite")
+    print mut.rewrite('NM_003002.3:c.274G>T')
+    print("validate")
+    print mut.validate('NM_003002.3:c.274G>T')
+    g_hgvs = [
+        'NC_000020.10:g.278701_278703delGGC',
+        'NC_000023.10:g.73501562T>C',
+        'NC_000002.11:g.37480321dup',
+        'NC_000002.11:g.85616929T>C',
+        'NC_000011.9:g.111959693G>T', # Mutalyzer example from Position Converter
+    ]
+
+    for g in g_hgvs:
+        print(g)
+        print mut.validate(g)
+
     print mut.project_t_to_g('NM_001135021.1:c.794T>C')
     print mut.project_c_to_p('NM_033089.6:c.471_473delGGC')
     print mut.project_n_to_c('NM_033089.6:n.495_497delGGC')

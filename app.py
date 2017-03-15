@@ -21,19 +21,13 @@ tools = {
     'Mutalyzer':['hgvseval.testservice.mutalyzerService', 'MutalyzerService']
 }
 
-tool = sys.argv[1].split('=')[1].title()
+tool = sys.argv[1]
 if tool in tools:
     package = tools[tool][0]
     name = tools[tool][1]
     my_module = importlib.import_module(package)
     class_ = getattr(my_module, name)
     service = class_()
-else:
-    print('Tool not supported. Please pick from list of supported tools:')
-    supported_tools = tools.keys()
-    supported_tools.sort()
-    for t in supported_tools:
-        print(t) 
 
 
 @app.route('/info', methods=['GET'])
@@ -76,7 +70,6 @@ def validate():
           "hgvsString": "todo"
         }
     """
-    # Not sure if I should use runMutalyzer or checkSyntax here for Mutalyzer?
     hgvs_string = request.form.get("hgvs_string")
     hgvs_string = service.validate(hgvs_string=hgvs_string)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
@@ -120,7 +113,6 @@ def rewrite():
           "hgvsString": "todo"
         }
     """
-    # TODO: Would this call runMutalyzer to test Mutalyzer?
     hgvs_string = request.form.get("hgvs_string")
     hgvs_string = service.rewrite(hgvs_string=hgvs_string)
     #req = _getProjectionRequest()
@@ -237,6 +229,7 @@ def _createProjectionResponse(hgvs_string=None):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--tool', help='Name of tool to test')
-    # TODO: If tool not given, print message Must give tool from list
+    parser.add_argument('tool', help='Name of tool to test. Supported tools: Biocommons, Mutalyzer')
+    args = parser.parse_args()
     app.run(debug=True, host='0.0.0.0', port=8000)  # TODO - add config class
+

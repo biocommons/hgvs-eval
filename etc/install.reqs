@@ -8,3 +8,4 @@ flask-cors
 pysam
 biocommons.seqrepo
 hgvs>=0.5.0.dev
+suds
