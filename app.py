@@ -18,7 +18,9 @@ CORS(app)
 
 tools = {
     'Biocommons':['hgvseval.testservice.biocommonsService', 'BiocommonsService'],
-    'Mutalyzer':['hgvseval.testservice.mutalyzerService', 'MutalyzerService']
+    'Counsyl':['hgvseval.testservice.counsylService', 'CounsylService'],
+    'Mutalyzer':['hgvseval.testservice.mutalyzerService', 'MutalyzerService'],
+    'Variation Reporter':['hgvseval.testservice.variationreporterService', 'VariationReporterService']
 }
 
 tool = sys.argv[1]
@@ -94,9 +96,16 @@ def parse():
 
         VMC Data Model?
     """
-    req = _getProjectionRequest()
-    resp = _createProjectionResponse(hgvs_string='todo')  # TODO - silly impl
+    hgvs_string = request.form.get("hgvs_string")
+    hgvs_string = service.parse(hgvs_string=hgvs_string)
+    #return json.dumps(hgvs_string)
+    resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
+    #print hgvs_string._asdict()
+    #print json.dumps(hgvs_string._asdict(), default=lambda o: o._asdict())
+    #return json.dumps(hgvs_string._asdict(), default=lambda o: o._asdict())
+    #return json.dumps(hgvs_string._asdict())
+    #req = _getProjectionRequest()
 
 
 @app.route('/rewrite', methods=['POST'])
@@ -128,8 +137,9 @@ def project_g_to_t():
     """
     hgvs_string = request.form.get("hgvs_string")
     ac = request.form.get("ac")
+    build = request.form.get("build")
     #print("project_g_to_t({}, {})".format(hgvs_string, ac)) # where does this print?
-    hgvs_string = service.project_g_to_t(hgvs_string=hgvs_string, ac=ac)
+    hgvs_string = service.project_g_to_t(hgvs_string=hgvs_string, ac=ac, build=build)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 
@@ -142,7 +152,8 @@ def project_t_to_g():
     """
     hgvs_string = request.form.get("hgvs_string")
     ac = request.form.get("ac")
-    hgvs_string = service.project_t_to_g(hgvs_string=hgvs_string, ac=ac)
+    build = request.form.get("build")
+    hgvs_string = service.project_t_to_g(hgvs_string=hgvs_string, ac=ac, build=build)
     resp = _createProjectionResponse(hgvs_string=hgvs_string)
     return MessageToJson(resp)
 

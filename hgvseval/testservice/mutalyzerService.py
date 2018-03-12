@@ -22,7 +22,7 @@ class MutalyzerService(HGVSTestService):
         }
 
 
-    def project_g_to_t(self, hgvs_string, ac):
+    def project_g_to_t(self, hgvs_string, ac, build):
         # as of 20161017 only hg19 is supposed by mutalyzer SOAP
         # numberConversion - converts I{c.} to I{g.} and vice versa
         r = MutalyzerService.o.numberConversion('hg19', hgvs_string)
@@ -31,7 +31,7 @@ class MutalyzerService(HGVSTestService):
         #return [str(hgvs) for hgvs in r.string]
 
 
-    def project_t_to_g(self, hgvs_string, ac):
+    def project_t_to_g(self, hgvs_string, ac, build):
         # as of 20161017 only hg19 is supposed by mutalyzer SOAP
         r = MutalyzerService.o.numberConversion('hg19', hgvs_string)
         hgvs_g = ",".join(r.string) 
@@ -69,10 +69,16 @@ class MutalyzerService(HGVSTestService):
         # How would this know what type of hgvs variant it got(g.,c.,p.)? 
         r = MutalyzerService.o.runMutalyzer(hgvs_string)
         all_hgvs = []
-        all_hgvs.append(r.genomicDescription)
-        all_hgvs.extend(r.proteinDescriptions.string)
-        all_hgvs.extend(r.transcriptDescriptions.string)
-        all_hgvs_str = ",".join(all_hgvs)
+        if hasattr(r, 'genomicDescription'):
+            all_hgvs.append(r.genomicDescription)
+        if r.proteinDescriptions is not None:
+            all_hgvs.extend(r.proteinDescriptions.string)
+        if r.transcriptDescriptions is not None:
+            all_hgvs.extend(r.transcriptDescriptions.string)
+        if not all_hgvs:
+            all_hgvs_str = 'No output from tool'
+        else:
+            all_hgvs_str = ",".join(all_hgvs)
         return all_hgvs_str
 
 
@@ -90,39 +96,34 @@ class MutalyzerService(HGVSTestService):
         hgvs_list = []
         # Going to assume this won't have any (). This might be a bad assumption.
         # Also assuming this is always a string
-        all_hgvs[r.genomicDescription] = 1
-        hgvs_list.extend(r.proteinDescriptions.string)
-        hgvs_list.extend(r.transcriptDescriptions.string)
-        r = re.compile("([A-Z0-9a-z_:\.]*)(\(.*?\).*?)?(.*)")
-        for h in hgvs_list:
-            match = re.search(r, h)
-            all_hgvs[match.group(1)+match.group(3)] = 1
-        if curr_var in all_hgvs:
-	    return 'True'
-	else:
-	    return 'False'
+        if hasattr(r, 'genomicDescription'):
+            #all_hgvs[r.genomicDescription] = 1
+            hgvs_list.append(r.genomicDescription)
+        if r.proteinDescriptions is not None:
+            hgvs_list.extend(r.proteinDescriptions.string)
+        if r.transcriptDescriptions is not None:
+            hgvs_list.extend(r.transcriptDescriptions.string)
+        if not hgvs_list:
+            output = 'False'
+        else:
+            for h in hgvs_list:
+                match = re.search(r, h)
+                all_hgvs[match.group(1)+match.group(3)] = 1
+            if curr_var in all_hgvs:
+	        output = 'True'
+	    else:
+	        output = 'False'
+        return output
+
+
+    def parse(self, hgvs_string):
+        # Mutalyzer does not have this feature
+        return 'False'
 
 '''
 # For testing mutalyzerService.py
 if __name__ == '__main__':
     mut = MutalyzerService()
-    print("rewrite")
-    print mut.rewrite('NM_003002.3:c.274G>T')
-    print("validate")
-    print mut.validate('NM_003002.3:c.274G>T')
-    g_hgvs = [
-        'NC_000020.10:g.278701_278703delGGC',
-        'NC_000023.10:g.73501562T>C',
-        'NC_000002.11:g.37480321dup',
-        'NC_000002.11:g.85616929T>C',
-        'NC_000011.9:g.111959693G>T', # Mutalyzer example from Position Converter
-    ]
-
-    for g in g_hgvs:
-        print(g)
-        print mut.validate(g)
-
-    print mut.project_t_to_g('NM_001135021.1:c.794T>C')
-    print mut.project_c_to_p('NM_033089.6:c.471_473delGGC')
-    print mut.project_n_to_c('NM_033089.6:n.495_497delGGC')
+    #print mut.info()
+    #print mut.project_g_to_t('NC_000006.12:g.49949402C>A', 'NM_001166478.1', 'GRCh38') #Returns None and errors. Is that ok?
 '''

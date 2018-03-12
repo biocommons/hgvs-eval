@@ -35,26 +35,31 @@ def test_criteria(endpoint, criteria):
         url,
         data={
             'ac': criteria['output_accepted'].split(':')[0], # Gets 1st accession number encountered
-            'hgvs_string': criteria['input']
+            'hgvs_string': criteria['input'],
+            'build':criteria['data']
         })
 
-    print res.json() # prints result from tool to command line but not to report
+    # TODO: Understand why this doesn't have the modified HGVS variants I processed in mutalyzerService.py
+    # This prints out 'No output from tool'...So why can't it print out the reformatted HGVS vars?
+    #print res.json() # prints result from tool to command line but not to report
     result = res.json()
     result_hgvs = result['hgvsString']
-    print(result_hgvs) # This is just what is returned from the test  
+    #print(result_hgvs) # This is just what is returned from the test  
 
     passed = False
-    # TODO: If result_hgvs has commas, split and make sure to look at each one 
-    # to see if it matches the answer
+    # TODO: Implement a check or somehow gracefully skip over Mutalyzer tests that I know 
+    #       are going to fail (ex. g. run through runMutalyzer in rewrite or validate)
+    #       1. if result_hgvs is not 'No output from tool': (All test cases have this output)
+    #       2. pytest skip?
     hgvs_vars = {}
     if "," in result_hgvs:
         my_hgvs_arr = result_hgvs.split(',')
         for h in my_hgvs_arr:
             hgvs_vars[h] = 1
-        print hgvs_vars
+        #print hgvs_vars
         ac_list = criteria['output_accepted'].split('|')
         for accepted_output in ac_list:
-            print accepted_output
+            #print accepted_output
             if accepted_output in hgvs_vars:
                 passed = True
     else:

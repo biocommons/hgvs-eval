@@ -1,17 +1,22 @@
 import hgvseval
-from .interface import HGVSTestService
+#from .interface import HGVSTestService
+from interface import HGVSTestService
 
 import hgvs.dataproviders.uta
 import hgvs.parser
 import hgvs.variantmapper
+#import hgvs.assemblymapper
 import hgvs.normalizer
 import hgvs.validator
 import datetime
+
+import json
 
 class BiocommonsService(HGVSTestService):
     hp = hgvs.parser.Parser()
     hdp = hgvs.dataproviders.uta.connect()
     vm = hgvs.variantmapper.VariantMapper(hdp)
+    #am = hgvs.assemblymapper.AssemblyMapper(hdp)
     hn = hgvs.normalizer.Normalizer(hdp)
     val = hgvs.validator.Validator(hdp)
 
@@ -27,12 +32,12 @@ class BiocommonsService(HGVSTestService):
             #"nomenclature_version": 'yeah, right',
             }
 
-    def project_t_to_g(self, hgvs_string, ac):
+    def project_t_to_g(self, hgvs_string, ac, build):
         var_t = BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
         var_g = BiocommonsService.vm.t_to_g(var_t, ac)
         return str(var_g)
 
-    def project_g_to_t(self, hgvs_string, ac):
+    def project_g_to_t(self, hgvs_string, ac, build):
         var_g = BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
         var_t = BiocommonsService.vm.g_to_t(var_g, ac)
         return str(var_t)
@@ -64,4 +69,38 @@ class BiocommonsService(HGVSTestService):
 	    return str(validate_var)
 	except Exception:
 	    return 'False'
+
+    def parse(self, hgvs_string):
+        var = BiocommonsService.hp.parse_hgvs_variant(hgvs_string)
+        parsed_var = { 
+            'location': {
+                'start': str(var.posedit.pos.start.base),
+                'end': str(var.posedit.pos.end.base),
+            },
+            'type': var.type,
+            'replacement': var.posedit.edit.alt,
+            'seqref': var.ac
+        }
+        if parsed_var['replacement'] is None:
+            parsed_var['replacement'] = ''
+        try:
+            parsed_var
+        except NameError:
+            return 'False'
+        else:
+            return 'True' 
+        # Return True for now since I'm not sure how to test for parsed object
+        #return parsed_var
+
+'''
+if __name__ == '__main__':
+    bs = BiocommonsService()
+    #print bs.info()
+    #print bs.parse('NC_000020.10:g.278701_278703delGGC')
+    #print bs.project_t_to_g('NM_003000.2:c.*159_*184delinsGAACCTGTTCCTTTACTTGCCCCAA', 'NC_000001.10')
+    #print bs.project_g_to_t('NC_000001.10:g.17345192_17345217delinsTTGGGGCAAGTAAAGGAACAGGTTC', 'NM_003000.2', 'GRCh37')
+    #print bs.project_g_to_t('NC_000001.11:g.17018697_17018722delinsTTGGGGCAAGTAAAGGAACAGGTTC', 'NM_003000.2', 'GRCh38')
+    #print bs.project_t_to_g('NM_003000.2:c.*159_*184delinsGAACCTGTTCCTTTACTTGCCCCAA', 'NC_000001.10', 'GRCh37')
+    print bs.project_g_to_t('NC_000002.11:g.37480321dup', 'NM_005813.4', 'GRCh37')
+'''
 
